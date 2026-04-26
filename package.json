@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Full-stack job application tracker with React, Node.js, Express, Prisma, SQLite, JWT authentication, document uploads, cover letters, status tracking, and dashboard analytics.",
   "scripts": {
-    "build": "npm install --prefix server && npm install --prefix client && npm run build --prefix client && npx prisma generate --schema=server/prisma/schema.prisma",
+    "build": "npm install --prefix server && npm install --include=dev --prefix client && npm run build --prefix client && npx prisma generate --schema=server/prisma/schema.prisma && npx prisma migrate deploy --schema=server/prisma/schema.prisma",
     "start": "npm start --prefix server"
   },
   "engines": {
