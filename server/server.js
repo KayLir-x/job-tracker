@@ -41,14 +41,18 @@ if (process.env.NODE_ENV === "production") {
 
   app.use(express.static(clientDistPath));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(clientDistPath, "index.html"));
+  app.use((req, res, next) => {
+    if (req.path.startsWith("/api") || req.path.startsWith("/uploads")) {
+      return next();
+    }
+
+    return res.sendFile(path.join(clientDistPath, "index.html"));
   });
 } else {
   app.get("/", (req, res) => {
     res.send("API is running...");
   });
-}
+}  
 
 const PORT = process.env.PORT || 5000;
 
