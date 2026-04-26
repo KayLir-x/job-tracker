@@ -4,6 +4,7 @@ import Applications from "./pages/Applications.jsx";
 import Documents from "./pages/Documents.jsx";
 import CoverLetters from "./pages/CoverLetters.jsx";
 import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -11,6 +12,7 @@ function App() {
   );
 
   const [activePage, setActivePage] = useState("dashboard");
+  const [authPage, setAuthPage] = useState("login");
 
   function handleLogin() {
     setIsLoggedIn(true);
@@ -44,8 +46,17 @@ function App() {
   }
 
   if (!isLoggedIn) {
-    return <Login onLogin={handleLogin} />;
+  if (authPage === "register") {
+    return <Register onShowLogin={() => setAuthPage("login")} />;
   }
+
+  return (
+    <Login
+      onLogin={handleLogin}
+      onShowRegister={() => setAuthPage("register")}
+    />
+  );
+}
 
   return (
     <div style={styles.app}>

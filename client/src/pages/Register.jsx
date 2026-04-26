@@ -1,11 +1,13 @@
 import { useState } from "react";
 import API_BASE_URL from "../api";
 
-function Login({ onLogin, onShowRegister }) {
+function Register({ onShowLogin }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event) {
@@ -13,14 +15,16 @@ function Login({ onLogin, onShowRegister }) {
 
     setLoading(true);
     setMessage("");
+    setSuccess(false);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          name,
           email,
           password,
         }),
@@ -29,14 +33,17 @@ function Login({ onLogin, onShowRegister }) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || data.message || "Login fehlgeschlagen");
+        throw new Error(
+          data.error || data.message || "Registrierung fehlgeschlagen"
+        );
       }
 
-      localStorage.setItem("token", data.token);
+      setSuccess(true);
+      setMessage("Registrierung erfolgreich. Du kannst dich jetzt einloggen.");
 
-      setMessage("Login erfolgreich.");
-
-      onLogin();
+      setName("");
+      setEmail("");
+      setPassword("");
     } catch (error) {
       console.error(error);
       setMessage(error.message);
@@ -48,15 +55,37 @@ function Login({ onLogin, onShowRegister }) {
   return (
     <main style={styles.page}>
       <section style={styles.card}>
-        <h1 style={styles.title}>Login</h1>
+        <h1 style={styles.title}>Registrieren</h1>
 
         <p style={styles.subtitle}>
-          Melde dich an, um deine Bewerbungen zu verwalten.
+          Erstelle ein Konto, um deine Bewerbungen, Dokumente und Anschreiben
+          sicher zu verwalten.
         </p>
 
-        {message && <p style={styles.message}>{message}</p>}
+        {message && (
+          <p
+            style={{
+              ...styles.message,
+              ...(success ? styles.successMessage : styles.errorMessage),
+            }}
+          >
+            {message}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit} style={styles.form}>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Name</label>
+            <input
+              style={styles.input}
+              type="text"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="Dein Name"
+              required
+            />
+          </div>
+
           <div style={styles.formGroup}>
             <label style={styles.label}>E-Mail</label>
             <input
@@ -76,25 +105,26 @@ function Login({ onLogin, onShowRegister }) {
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              placeholder="Dein Passwort"
+              placeholder="Mindestens 8 Zeichen"
+              minLength={8}
               required
             />
           </div>
 
           <button style={styles.button} type="submit" disabled={loading}>
-            {loading ? "Login läuft..." : "Einloggen"}
+            {loading ? "Registrierung läuft..." : "Konto erstellen"}
           </button>
         </form>
 
         <div style={styles.switchBox}>
-          <p style={styles.switchText}>Du hast noch kein Konto?</p>
+          <p style={styles.switchText}>Du hast bereits ein Konto?</p>
 
           <button
             style={styles.linkButton}
             type="button"
-            onClick={onShowRegister}
+            onClick={onShowLogin}
           >
-            Jetzt registrieren
+            Zum Login
           </button>
         </div>
       </section>
@@ -127,13 +157,22 @@ const styles = {
   subtitle: {
     margin: "0 0 24px 0",
     color: "#666",
+    lineHeight: "1.5",
   },
   message: {
     padding: "12px",
     marginBottom: "16px",
-    background: "#eef5ff",
-    border: "1px solid #b8d7ff",
     borderRadius: "8px",
+  },
+  successMessage: {
+    background: "#dcfce7",
+    border: "1px solid #86efac",
+    color: "#166534",
+  },
+  errorMessage: {
+    background: "#fee2e2",
+    border: "1px solid #fecaca",
+    color: "#991b1b",
   },
   form: {
     display: "grid",
@@ -182,4 +221,4 @@ const styles = {
   },
 };
 
-export default Login;
+export default Register;
