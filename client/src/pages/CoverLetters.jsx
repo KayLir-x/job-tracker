@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
+import API_BASE_URL from "../api";
 
-const API_URL = "http://localhost:5000/api/cover-letters";
+const API_URL = `${API_BASE_URL}/cover-letters`;
 
 function CoverLetters() {
   const [coverLetters, setCoverLetters] = useState([]);

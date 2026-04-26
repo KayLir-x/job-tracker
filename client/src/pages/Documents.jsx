@@ -245,7 +245,7 @@ function Documents() {
                     {document.filePath && (
                       <a
                         style={styles.link}
-                        href={`http://localhost:5000${document.filePath}`}
+                        href={document.filePath}
                         target="_blank"
                         rel="noreferrer"
                       >

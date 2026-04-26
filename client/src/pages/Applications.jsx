@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
+import API_BASE_URL from "../api";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = API_BASE_URL;
 
 const STATUS_OPTIONS = [
   { value: "all", label: "Alle" },
